@@ -35,4 +35,5 @@ A number of intermediary files are generated to speed up re-running the pipeline
 To run it should be as simple as:
 
 `mamba activate LongReadQC`
+
 `Snakemake --cores 1`
