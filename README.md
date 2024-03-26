@@ -38,4 +38,7 @@ To run it should be as simple as:
 
 `mamba activate LongReadQC`
 
-`Snakemake --cores 1`
+`snakemake --cores 1`
+
+## DAG of rules:
+![dag2](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/e663bb71-1ebe-43fe-bcf7-50da9b5ccca9)
