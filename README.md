@@ -34,6 +34,8 @@ A number of intermediary files are generated to speed up re-running the pipeline
 
 To run it should be as simple as:
 
+`mamba env create --file=environment.yml`
+
 `mamba activate LongReadQC`
 
 `Snakemake --cores 1`
