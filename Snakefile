@@ -36,7 +36,7 @@ rule generate_jellyfish_spectra:
     output:
         "jellyfish/{sample}.jf",
     shell:
-        "samtools fastq {input} | jellyfish count /dev/fd/0 -m21 -s 100M -L 2 -o {output}"
+        "samtools fastq {input} | jellyfish count /dev/fd/0 -m21 -s 100M -L 2 -C -o {output}"
 
 
 rule dump_jelly:
