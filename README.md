@@ -42,3 +42,9 @@ To run it should be as simple as:
 
 ## DAG of rules:
 ![dag2](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/e663bb71-1ebe-43fe-bcf7-50da9b5ccca9)
+
+## Parameters and modifications to consider:
+There are a few modifications that we may need to do to efficiently run on large samples. If storage of read length numpy files and I/O operations are too costly then we should modify the scripts to not save read lengths to disk or store to memory and use file streaming to generate a simplified histogram. Secondly, jellyfish -s is set to 100M which is 100 million entries in the hash table. The recommended size of the table is: _(G + k ∗ n)/0.8_, where _G_ is genome size _k_ is k-mer size and _n_ is the number of reads in the library. Increasing hash table size will use more memory and increase run time and may not be necessary as I exclude k-mers that are singletons in the library. 
+
+
+
