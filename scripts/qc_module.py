@@ -4,6 +4,7 @@ import seaborn as sns
 import numpy as np
 from sklearn.decomposition import PCA
 import sys
+import statsmodels.formula.api as smf
 
 class kmer_pca:
     """
@@ -23,6 +24,21 @@ class kmer_pca:
         kmer_spectra = kmer_spectra.fillna(0)
 
         return kmer_spectra
+
+    def plotPCA(self, pc_comp, snkmk_out, meta=None):
+            #generate the plots for the PCA of first two PCs
+            with sns.axes_style('whitegrid'):
+                if meta == None:
+                    sns.scatterplot(data=pc_comp, x='PC1', y='PC2', edgecolor=None, alpha=0.75, color='black')
+                else:
+                    sns.scatterplot(data=pc_comp, x='PC1', y='PC2', edgecolor=None, alpha=0.75, hue=meta)
+                plt.xticks(fontsize=15)
+                plt.yticks(fontsize=15)
+                plt.xlabel('PC1', fontsize=20)
+                plt.ylabel('PC1', fontsize=20)
+                plt.tight_layout()
+                fname = snkmk_out[0].replace("None", str(meta).replace(" ", "_").replace("/", "-").replace("#", "Number")) #clean dangerous characters and write filename
+                plt.savefig(fname, dpi=300)
 
     def generatePCA(self, kmer_spectra, snkmk_out, metadata=None):
         """
@@ -50,23 +66,35 @@ class kmer_pca:
         pca_model = PCA(n_components=min([100, z_kmer_spectra.shape[1]])).fit(z_kmer_spectra.T)
         components = pca_model.transform(z_kmer_spectra.T)
 
-        pc_comp = pd.DataFrame(data=components, columns=[f"PC{n}" for n in range(components.shape[0])])
+        pc_comp = pd.DataFrame(data=components, columns=[f"PC{n+1}" for n in range(components.shape[0])],
+                               index=[sname.split(".")[0] for sname in kmer_spectra.columns])
 
-        #generate the plots for the PCA of first two PCs
-        with sns.axes_style('whitegrid'):
-            sns.scatterplot(data=pc_comp, x='PC1', y='PC2', edgecolor=None, alpha=0.75, color='black')
-            plt.xticks(fontsize=15)
-            plt.yticks(fontsize=15)
-            plt.xlabel('PC1', fontsize=20)
-            plt.ylabel('PC1', fontsize=20)
-            plt.tight_layout()
-            plt.savefig(snkmk_out[0], dpi=300)
+        if metadata != None: #if specified metadata exists
+            meta_df = pd.read_csv(metadata, index_col=0)
+            #list comprehension to include only metadata where fields are non-identical across samples but not unique for each sample
+            meta_fields = [col for col in meta_df.columns if (len(set(meta_df[col].values)) > 1) and (len(set(meta_df[col].values)) < len(meta_df.index) )]
+            meta_df = meta_df[meta_fields]
+            pc_comp = pd.concat([pc_comp, meta_df], axis=1)
+            #generate generic PCA
+            self.plotPCA(pc_comp, snkmk_out)
+            #generate colored PCA by meta fields:
+            for meta in meta_fields:
+                self.plotPCA(pc_comp, snkmk_out, meta)
+
+        else: #ignore metadata
+            #generate the plots for the PCA of first two PCs
+            self.plotPCA(pc_comp, snkmk_out)
 
         #output variance explained by each component
         varExp = pd.DataFrame(data={'PC':[n+1 for n in range(components.shape[0])],
                                     'VarExplained':[f"{ev*100:0.2f}" for ev in pca_model.explained_variance_ratio_]})
         varExp.to_csv(snkmk_out[1], index=None)
+        pc_comp.to_csv(snkmk_out[2])
 
+    def callModel(self, Y, X, data):
+        model = smf.mixedlm(f'{Y} ~ PC2', data, groups=data[X])
+        fit_model = model.fit(method=["lbfgs"])
+        print(fit_model.summary())
 class library_statistics:
     """
     Module for generating library statistic tables and plots directly from the BAM files.

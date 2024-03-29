@@ -1,5 +1,7 @@
 samples:
-    HiFi.sample1: bam_files/HiFi.sample1.bam
-    HiFi.sample2: bam_files/HiFi.sample2.bam
-    HiFi.sample3: bam_files/HiFi.sample3.bam
+    SHIP1111111: [bam_files/HiFi.sample1.bam, bam_files/HiFi.sample2.bam]
+    SHIP1111112: [bam_files/HiFi.sample2.bam]
+    SHIP1111113: [bam_files/HiFi.sample3.bam]
 
+metadata:
+    metadata.csv

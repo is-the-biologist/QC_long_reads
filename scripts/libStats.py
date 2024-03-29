@@ -13,5 +13,5 @@ if __name__ == '__main__':
 
     stat_table = pd.DataFrame(data=stat_matrix,
                               columns=['Total bp', 'Mean', "SD", "1-ile", '10-ile', '25-ile', '50-ile', '75-ile', '90-ile', '99-ile'],
-                              index=[fname.split('/')[-1] for fname in snakemake.input])
+                              index=[fname.split('/')[-1].replace(".npy", "") for fname in snakemake.input])
     stat_table.to_csv(snakemake.output[0], index=True)
