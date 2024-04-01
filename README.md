@@ -31,7 +31,7 @@ library_stats.csv is a summary table of read length and library size statistics 
     
 A companion to this output are the {sample}.histogram.png plots that show the histogram of read length sizes of the libraries. Each library included in the config file will generate its own histogram.
 
-The meta_r2_effects.csv and meta_varExp.png as the result of linear mixed-effect models run with PCs of Jellyfish spectra as dependent variables and metadata fields as dependent variables.
+The `meta_r2_effects.csv` and `meta_varExp.png` as the result of linear mixed-effect models run with PCs of Jellyfish spectra as dependent variables and metadata fields as dependent variables.
 The idea behind this is quite simple, the PCs are a representation of the variation in k-mer spectra in the libraries and they should be independent of technical effects. Therefore, we use a linear
 mixed-effect model where we model the PCs as the dependent variable and technical covariates (metadata) as random-effects and estimate the proportion of the variance in the PCs that can be explained by
 the random effects. We additionally add in the fixed effect, total library size in bp (Z_total_bp), and estimate the effect of that as well. Additional, fixed-effects could be included as determined through
@@ -51,7 +51,8 @@ To run it should be as simple as:
 `snakemake --cores 1`
 
 ## DAG of rules:
-![dag2](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/e663bb71-1ebe-43fe-bcf7-50da9b5ccca9)
+![dag](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/1112b665-9b02-494d-8938-9d30821cb2a6)
+
 
 
 ## Parameters and modifications to consider:
