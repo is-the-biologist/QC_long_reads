@@ -19,10 +19,11 @@ rule all:
         "plots/kmer_None_PCA.png",
         "qc_tables/pca_var_explained.csv",
         "qc_tables/library_stats.csv",
-        "qc_tables/meta_effects.csv"
+        "qc_tables/meta_r2_effects.csv",
+        "plots/meta_varExp.png"
 
 
-rule generate_stats:
+rule generate_numpy_readLength_distributions:
     input:
         get_bam,
     output:
@@ -40,7 +41,7 @@ rule compute_library_stats:
         "scripts/libStats.py"
 
 
-rule generate_jellyfish_spectra:
+rule generate_jellyfish_kmer_spectra:
     input:
         get_bam,
     output:
@@ -49,7 +50,7 @@ rule generate_jellyfish_spectra:
         shell(concat_jellyfish_stream(input, output))
 
 
-rule dump_jelly:
+rule dump_jellyfish_spectra_to_txt:
     input:
         "jellyfish/{sample}.jf",
     output:
@@ -58,7 +59,7 @@ rule dump_jelly:
         "jellyfish dump -c {input} > {output}"
 
 
-rule plotSpectraPCA:
+rule plot_PCA_of_jellyfish_spectra:
     input:
         expand("jellyfish/{sample}.jf.txt", sample=config["samples"]),
         config['metadata']
@@ -69,11 +70,12 @@ rule plotSpectraPCA:
     script:
         "scripts/kspectra_pca.py"
 
-rule spectraVarModels:
+rule MixedEffect_models_of_jellyfish_PCAs:
     input:
         "qc_tables/pca_components.csv",
         "qc_tables/library_stats.csv"
     output:
-        "qc_tables/meta_effects.csv"
+        "plots/meta_varExp.png",
+        "qc_tables/meta_r2_effects.csv"
     script:
-        'scripts/varExpModels.py'
+        'scripts/varExpModels.R'

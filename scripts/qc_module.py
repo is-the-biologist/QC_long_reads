@@ -4,7 +4,6 @@ import seaborn as sns
 import numpy as np
 from sklearn.decomposition import PCA
 import sys
-import statsmodels.formula.api as smf
 
 class kmer_pca:
     """
@@ -35,10 +34,11 @@ class kmer_pca:
                 plt.xticks(fontsize=15)
                 plt.yticks(fontsize=15)
                 plt.xlabel('PC1', fontsize=20)
-                plt.ylabel('PC1', fontsize=20)
+                plt.ylabel('PC2', fontsize=20)
                 plt.tight_layout()
-                fname = snkmk_out[0].replace("None", str(meta).replace(" ", "_").replace("/", "-").replace("#", "Number")) #clean dangerous characters and write filename
+                fname = snkmk_out[0].replace("None", str(meta))
                 plt.savefig(fname, dpi=300)
+                plt.close()
 
     def generatePCA(self, kmer_spectra, snkmk_out, metadata=None):
         """
@@ -74,11 +74,12 @@ class kmer_pca:
             #list comprehension to include only metadata where fields are non-identical across samples but not unique for each sample
             meta_fields = [col for col in meta_df.columns if (len(set(meta_df[col].values)) > 1) and (len(set(meta_df[col].values)) < len(meta_df.index) )]
             meta_df = meta_df[meta_fields]
+            meta_df.columns = [m.replace(" ", "_").replace("/", "_").replace("#", "Number") for m in meta_df.columns] #clean annoying characters
             pc_comp = pd.concat([pc_comp, meta_df], axis=1)
             #generate generic PCA
             self.plotPCA(pc_comp, snkmk_out)
             #generate colored PCA by meta fields:
-            for meta in meta_fields:
+            for meta in meta_df.columns:
                 self.plotPCA(pc_comp, snkmk_out, meta)
 
         else: #ignore metadata
@@ -91,10 +92,7 @@ class kmer_pca:
         varExp.to_csv(snkmk_out[1], index=None)
         pc_comp.to_csv(snkmk_out[2])
 
-    def callModel(self, Y, X, data):
-        model = smf.mixedlm(f'{Y} ~ PC2', data, groups=data[X])
-        fit_model = model.fit(method=["lbfgs"])
-        print(fit_model.summary())
+
 class library_statistics:
     """
     Module for generating library statistic tables and plots directly from the BAM files.
