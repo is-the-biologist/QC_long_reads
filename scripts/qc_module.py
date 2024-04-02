@@ -98,7 +98,7 @@ class library_statistics:
     Module for generating library statistic tables and plots directly from the BAM files.
     """
     def __init__(self):
-        self.bin_num=1000
+        self.bin_num=100
 
     def read_in_bam_stream(self):
         """
@@ -135,7 +135,8 @@ class library_statistics:
             sns.histplot(x=RL_array, bins=self.bin_num, color='black')
             plt.xlabel('Read lengths', fontsize=20)
             plt.ylabel('Counts', fontsize=20)
-            plt.xticks(fontsize=15)
+            plt.xticks(fontsize=15, rotation=45)
             plt.yticks(fontsize=15)
             plt.tight_layout()
             plt.savefig(f"plots/{snk_out.split('/')[-1].split('npy')[0]}.histogram.png", dpi=300)
+            plt.close()
