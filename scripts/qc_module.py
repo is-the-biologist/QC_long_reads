@@ -28,9 +28,9 @@ class kmer_pca:
             #generate the plots for the PCA of first two PCs
             with sns.axes_style('whitegrid'):
                 if meta == None:
-                    sns.scatterplot(data=pc_comp, x='PC1', y='PC2', edgecolor=None, alpha=0.75, color='black')
+                    sns.scatterplot(data=pc_comp, x='PC1', y='PC2', edgecolor=None, alpha=0.5, color='black')
                 else:
-                    sns.scatterplot(data=pc_comp, x='PC1', y='PC2', edgecolor=None, alpha=0.75, hue=meta)
+                    sns.scatterplot(data=pc_comp, x='PC1', y='PC2', edgecolor=None, alpha=0.5, hue=meta)
                 plt.xticks(fontsize=15)
                 plt.yticks(fontsize=15)
                 plt.xlabel('PC1', fontsize=20)

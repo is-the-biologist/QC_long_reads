@@ -67,16 +67,15 @@ Running this Snakefile as is will run a toy example wherein we generate k-mer sp
 
 ![meta_varExp](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/6950e953-899f-4d91-8a57-04994f21a9df)
 
-From the result of the regression on the PCs we can see that most of the variation on PC1 is explained by "organism", which you can see pretty clearly by looking at the scatterplot of the first two PCs:
+From the result of the regression on the PCs we can see that most of the variation on PC1 is explained by "organism", followed by "chemistry" and then "Z_total_bp". You can see this pretty clearly in the PCA as well.
 
 ![kmer_organism_PCA](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/f6f302b4-f6d1-4993-bd29-dced3c0948cf)
 
-PC2 is largely explained by "Z_total_bp" which is just the Z-score normalized total bp of the library. This makes sense. Not all of our BAM files have an equal amount of sequence. I intentionally made some samples be composed of multiple BAM files. This effect is probably stronger in the toy example than in real life because these toy BAM files only have ~1,000 reads each for size-limit constraints. 
-"chemistry" also explains a large proportion of the variation of PC2, which may indicate the differences between Illumina and HiFi data. However, total library size is conflated with chemistry to a degree because the Illumina bam files will have lower overall depth than HiFi due to smaller read sizes. 
+PC2 is largely explained by "chemistry" which may indicate the differences between Illumina and HiFi sequencing or adapter content in the Illumina library.
 
 ![kmer_chemistry_PCA](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/2adb1c53-f685-4f8d-a8ab-3734721b2b01)
 
-The PCs beyond PC4 or PC5 become less easy to interpret because they represent very small % variance explained in the k-mer spectra that they are probably not useful to look at. 
+PC3 (which is not visualized in the scatterplot). Is largely driven by "Z_total_bp" which is just the Z-score normalized total bps of the library. 
 
 It is important to keep in mind that this QC analysis is not meant to provide a perfect model of all the aspects of the HiFi data and completely diagnose problems. Rather, it is meant to serve as a starting point for exploratory analysis of batch effects of HiFi (or really any genomic data). 
 

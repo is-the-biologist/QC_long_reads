@@ -10,7 +10,7 @@ samples:
     SHIP1111119: [bam_files/dmel_illumina.1.bam]
     SHIP1111120: [bam_files/dmel_illumina.2.bam]
     SHIP1111121: [bam_files/dmel_illumina.3.bam]
-    SHIP1111122: [bam_files/dmel_illumina.4.bam, bam_files/dmel_illumina.3.bam, bam_files/dmel_illumina.2.bam, bam_files/dmel_illumina.1.bam]
+    SHIP1111122: [bam_files/dmel_illumina.4.bam]
 
 metadata:
     metadata.csv
