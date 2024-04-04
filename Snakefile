@@ -11,7 +11,7 @@ def concat_bam_stream(input, out):
 
 def concat_jellyfish_stream(input, out):
 
-    shell_commands =  "cat " + " ".join([f'<(samtools fastq {bam})'for bam in input]) + f" | jellyfish count /dev/fd/0 -m21 -s 100M -L 2 -C -o {out}"
+    shell_commands =  "cat " + " ".join([f'<(samtools fastq {bam})'for bam in input]) + f" | jellyfish count /dev/fd/0 -m21 -s {config['kmer_mem_usage']} -L 2 -C -o {out}"
     return shell_commands
 
 rule all:

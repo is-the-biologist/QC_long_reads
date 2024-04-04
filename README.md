@@ -2,14 +2,23 @@
 
 ## Purpose:
 This is a SnakeMake pipeline that will take in sample names in a config file and output a series of tables and plots that I think will be useful QC summary statistics for HiFi reads. 
+Primarily, this pipeline focuses on analyses of k-mer spectra of the libraries. k-mers are representative of the sequence composition of libraries and there is evidence that different sequencer platforms have biases in k-mer content. This may prove useful to explore as we continue to assemble and analyze genomes. Particularly, regions of low complexity that can be biased by k-mer content more easily than single copy regions will be more strongly affected. Tandem repeats may also be biased by k-mer drop-out rates. Ultimately understanding at a broad scale the k-mer spectra can serve to QC libraries.
 
 ## Dependencies:
 All dependencies should be included in the `environment.yml` file, with the exception of `Jellyfish` (https://github.com/gmarcais/Jellyfish). To activate the environment you need conda or mamba installed and then simply do: `mamba env create --file=environment.yml`
 
 ## Inputs:
-The Snakefile requires unaligned BAM files as input (in our case from HiFi, but conceivably from any sequencing platform). These can be specified within the `config.yaml` file. Simply modify the name and filepath of the entries within the `config.yaml` file with the BAM files in question before running. Importantly, place the BAM files in "[]" such that each Shipping ID has all corresponding BAM files within the same ID. There is no-deduplication or adapter removal step in this workflow, but this can easily be modified by adding in those steps to before the calculation of k-mer spectra and read length statistics. 
 
-Metadata file is a csv that contains the various meta-fields that may be important in assessing batch or technical effects in the data. 
+### BAM files:
+The Snakefile requires unaligned BAM files as input (in our case from HiFi, but conceivably from any sequencing platform). In the toy example I include HiFi reads from a human genome and from D melanogaster genome as well as Illumina reads from D melanogaster to illustrate stark k-mer differences. There is no-deduplication or adapter removal step in this workflow, but this can easily be modified by adding in those steps to before the calculation of k-mer spectra and read length statistics. 
+
+### metadata.csv:
+The metadata csv file contains the various meta-fields that may be important in assessing batch or technical effects in the data. In the toy example included in this repo I have added two additional columns one for "organism" and "chemistry". This won't be included in real metadata but is useful for the example workflow.
+
+### config.yaml
+.bam inputs can be specified in the `config.yaml` file. Simply modify the name and filepath of the entries within the `config.yaml` file with the BAM file paths in the "sample" section. Importantly, place the BAM files in "[]" such that each Shipping ID has all corresponding BAM files within the same ID. 
+You must also specify a metadata.csv file to use for your samples, which MUST have identical Shipping ID column entries to the IDs within the 'sample' data structure. Finally, Jellyfish takes in an argument of has table size which can be modified by 'kmer_mem_usage'. `jellyfish -s 100M` sets 100 million entries in the hash table. The recommended size of the table is: _(G + k ∗ n)/0.8_, where _G_ is genome size _k_ is k-mer size and _n_ is the number of reads in the library. Increasing hash table size will use more memory and increase run time and may not be necessary as I exclude k-mers that are singletons in the library. 
+
 
 ## Outputs:
     plots/kmer_PCA.png
@@ -53,10 +62,26 @@ To run it should be as simple as:
 ## DAG of rules:
 ![dag](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/1112b665-9b02-494d-8938-9d30821cb2a6)
 
+## Toy example:
+Running this Snakefile as is will run a toy example wherein we generate k-mer spectra and library statistics for human HiFi, D melanogaster HiFi, and D melanogaster Illumina BAM files. This example illustrates how regression on the PCs of k-mer spectra can generate results that allow us to find covariates driving variation in our data.
 
+![meta_varExp.png](plots%2Fmeta_varExp.png)
+
+From the result of the regression on the PCs we can see that most of the variation on PC1 is explained by "organism", which you can see pretty clearly by looking at the scatterplot of the first two PCs:
+
+![kmer_organism_PCA.png](plots%2Fkmer_organism_PCA.png)
+
+PC2 is largely explained by "Z_total_bp" which is just the Z-score normalized total bp of the library. This makes sense. Not all of our BAM files have an equal amount of sequence. I intentionally made some samples be composed of multiple BAM files. This effect is probably stronger in the toy example than in real life because these toy BAM files only have ~1,000 reads each for size-limit constraints. 
+"chemistry" also explains a large proportion of the variation of PC2, which may indicate the differences between Illumina and HiFi data. However, total library size is conflated with chemistry to a degree because the Illumina bam files will have lower overall depth than HiFi due to smaller read sizes. 
+
+![kmer_chemistry_PCA.png](plots%2Fkmer_chemistry_PCA.png)
+
+The PCs beyond PC4 or PC5 become less easy to interpret because they represent very small % variance explained in the k-mer spectra that they are probably not useful to look at. 
+
+It is important to keep in mind that this QC analysis is not meant to provide a perfect model of all the aspects of the HiFi data and completely diagnose problems. Rather, it is meant to serve as a starting point for exploratory analysis of batch effects of HiFi (or really any genomic data). 
 
 ## Parameters and modifications to consider:
-There are a few modifications that we may need to do to efficiently run on large samples. If storage of read length numpy files and I/O operations are too costly then we should modify the scripts to not save read lengths to disk or store to memory and use file streaming to generate a simplified histogram. Secondly, `jellyfish -s 100M` sets 100 million entries in the hash table. The recommended size of the table is: _(G + k ∗ n)/0.8_, where _G_ is genome size _k_ is k-mer size and _n_ is the number of reads in the library. Increasing hash table size will use more memory and increase run time and may not be necessary as I exclude k-mers that are singletons in the library. 
+There are a few modifications that we may need to do to efficiently run on large samples. If storage of read length numpy files and I/O operations are too costly then we should modify the scripts to not save read lengths to disk or store to memory and use file streaming to generate a simplified histogram. Secondly, 
 
 
 
