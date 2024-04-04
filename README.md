@@ -75,7 +75,9 @@ PC2 is largely explained by "chemistry" which may indicate the differences betwe
 
 ![kmer_chemistry_PCA](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/404f0bb0-f4a5-47a9-bd5b-3882a2e9c238)
 
-PC3 (which is not visualized in the scatterplot). Is largely driven by "Z_total_bp" which is just the Z-score normalized total bps of the library. 
+PC3 (which is not visualized in the scatterplot). Is largely driven by "Z_total_bp" which is just the Z-score normalized total bps of the library. This makes sense as greater sequencing depth will give greater abundance of common k-mers and greater variety of k-mer sequences.
+
+Further down the PCs the interpretations are less clear as the % variance explained by these PCs is minimal.
 
 It is important to keep in mind that this QC analysis is not meant to provide a perfect model of all the aspects of the HiFi data and completely diagnose problems. Rather, it is meant to serve as a starting point for exploratory analysis of batch effects of HiFi (or really any genomic data). 
 
