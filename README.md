@@ -65,15 +65,15 @@ To run it should be as simple as:
 ## Toy example:
 Running this Snakefile as is will run a toy example wherein we generate k-mer spectra and library statistics for human HiFi, D melanogaster HiFi, and D melanogaster Illumina BAM files. This example illustrates how regression on the PCs of k-mer spectra can generate results that allow us to find covariates driving variation in our data.
 
-![meta_varExp](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/6950e953-899f-4d91-8a57-04994f21a9df)
+![meta_varExp](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/5894d147-341e-46fc-94e2-5b30fd5831e5)
 
 From the result of the regression on the PCs we can see that most of the variation on PC1 is explained by "organism", followed by "chemistry" and then "Z_total_bp". You can see this pretty clearly in the PCA as well.
 
-![kmer_organism_PCA](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/f6f302b4-f6d1-4993-bd29-dced3c0948cf)
+![kmer_organism_PCA](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/47f94425-b173-4d1d-999a-a01061878209)
 
 PC2 is largely explained by "chemistry" which may indicate the differences between Illumina and HiFi sequencing or adapter content in the Illumina library.
 
-![kmer_chemistry_PCA](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/2adb1c53-f685-4f8d-a8ab-3734721b2b01)
+![kmer_chemistry_PCA](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/404f0bb0-f4a5-47a9-bd5b-3882a2e9c238)
 
 PC3 (which is not visualized in the scatterplot). Is largely driven by "Z_total_bp" which is just the Z-score normalized total bps of the library. 
 
