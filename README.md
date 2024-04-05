@@ -65,19 +65,17 @@ To run it should be as simple as:
 ## Toy example:
 Running this Snakefile as is will run a toy example wherein we generate k-mer spectra and library statistics for human HiFi, D melanogaster HiFi, and D melanogaster Illumina BAM files. This example illustrates how regression on the PCs of k-mer spectra can generate results that allow us to find covariates driving variation in our data.
 
-![meta_varExp](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/5894d147-341e-46fc-94e2-5b30fd5831e5)
+![meta_varExp](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/9e20b225-c727-47c8-a12d-159e8322e8df)
 
-From the result of the regression on the PCs we can see that most of the variation on PC1 is explained by "organism", followed by "chemistry" and then "Z_total_bp". You can see this pretty clearly in the PCA as well.
+From the result of the regression on the PCs we can see that mos tof the variation is driven by "chemistry", which can indicate the differences between Illumina and HiFi. There may also be genomic differences between the HiFi and Illumina libraries that explain this as these things are conflated in the study design.
 
-![kmer_organism_PCA](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/47f94425-b173-4d1d-999a-a01061878209)
+![kmer_chemistry_PCA](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/d0b1d250-28b1-48dc-ba2c-f86addf04cad)
 
-PC2 is largely explained by "chemistry" which may indicate the differences between Illumina and HiFi sequencing or adapter content in the Illumina library.
+Organism also explains a large portion of the variation:
 
-![kmer_chemistry_PCA](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/404f0bb0-f4a5-47a9-bd5b-3882a2e9c238)
+![kmer_organism_PCA](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/6aff4879-f52f-424c-98a4-8bfa3cc4661b)
 
-PC3 (which is not visualized in the scatterplot). Is largely driven by "Z_total_bp" which is just the Z-score normalized total bps of the library. This makes sense as greater sequencing depth will give greater abundance of common k-mers and greater variety of k-mer sequences.
-
-Further down the PCs the interpretations are less clear as the % variance explained by these PCs is minimal.
+And most of the remained of the PC1 variation is explained by "Z_total_bp" which is just the Z-score normalized total bps of the library. This makes sense as greater sequencing depth will give greater abundance of common k-mers and greater variety of k-mer sequences.
 
 It is important to keep in mind that this QC analysis is not meant to provide a perfect model of all the aspects of the HiFi data and completely diagnose problems. Rather, it is meant to serve as a starting point for exploratory analysis of batch effects of HiFi (or really any genomic data). 
 
