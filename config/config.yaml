@@ -1,0 +1,19 @@
+samples:
+    SHIP1111111: [workflow/resources/bam_files/hsap_hifi.1.bam, workflow/resources/bam_files/hsap_hifi.4.bam]
+    SHIP1111112: [workflow/resources/bam_files/hsap_hifi.2.bam]
+    SHIP1111113: [workflow/resources/bam_files/hsap_hifi.3.bam]
+    SHIP1111114: [workflow/resources/bam_files/hsap_hifi.4.bam]
+    SHIP1111115: [workflow/resources/bam_files/dmel_hifi.1.bam]
+    SHIP1111116: [workflow/resources/bam_files/dmel_hifi.2.bam]
+    SHIP1111117: [workflow/resources/bam_files/dmel_hifi.3.bam]
+    SHIP1111118: [workflow/resources/bam_files/dmel_hifi.1.bam, workflow/resources/bam_files/dmel_hifi.4.bam]
+    SHIP1111119: [workflow/resources/bam_files/dmel_illumina.1.bam]
+    SHIP1111120: [workflow/resources/bam_files/dmel_illumina.2.bam]
+    SHIP1111121: [workflow/resources/bam_files/dmel_illumina.3.bam]
+    SHIP1111122: [workflow/resources/bam_files/dmel_illumina.4.bam]
+
+metadata:
+    config/metadata.csv
+
+kmer_mem_usage:
+    100M
