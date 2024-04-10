@@ -5,7 +5,8 @@ This is a SnakeMake pipeline that will take in sample names in a config file and
 Primarily, this pipeline focuses on analyses of k-mer spectra of the libraries. k-mers are representative of the sequence composition of libraries and there is evidence that different sequencer platforms have biases in k-mer content. This may prove useful to explore as we continue to assemble and analyze genomes. Particularly, regions of low complexity that can be biased by k-mer content more easily than single copy regions will be more strongly affected. Tandem repeats may also be biased by k-mer drop-out rates. Ultimately understanding at a broad scale the k-mer spectra can serve to QC libraries.
 
 ## Dependencies:
-All dependencies and environment necessary are within the `longreadqc.sif` file and can be run with Singularity (https://docs.sylabs.io/guides/latest/user-guide/). Alternatively, the pipeline can be run by creating a conda environment with environment.yml and a seperate install of Jellyfish (https://github.com/gmarcais/Jellyfish).
+All dependencies and environment necessary are within the `longreadqc.sif` file and can be run with Singularity (https://docs.sylabs.io/guides/latest/user-guide/). Unfortunately this image file is too large to be uploaded to Github. 
+Alternatively, the pipeline can be run by creating a conda environment with environment.yml and a seperate install of Jellyfish (https://github.com/gmarcais/Jellyfish).
 
 ## Inputs:
 
@@ -49,7 +50,7 @@ future analyses.
 ## Intermediary files:
 A number of intermediary files are generated to speed up re-running the pipeline when new samples are added. These are the `.jf` files and the `.npy` files. These contain the k-mer spectra and the read length distributions respectively.
 
-# Running the pipeline:
+# Running the toy example:
 
 Once Singularity is installed it should be as simple as:
 
