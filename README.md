@@ -38,8 +38,6 @@ library_stats.csv is a summary table of read length and library size statistics 
     Mean: average read length size
     SD: standard deviation of read lengths
     1-ile, 10-ile,25-ile,50-ile,75-ile,90-ile,99-ile: 1st to 99th percentile of read length sizes in the library.
-    
-A companion to this output are the {sample}.histogram.png plots that show the histogram of read length sizes of the libraries. Each library included in the config file will generate its own histogram.
 
 The `meta_r2_effects.csv` and `meta_varExp.png` as the result of linear mixed-effect models run with PCs of Jellyfish spectra as dependent variables and metadata fields as dependent variables.
 The idea behind this is quite simple, the PCs are a representation of the variation in k-mer spectra in the libraries and they should be independent of technical effects. Therefore, we use a linear

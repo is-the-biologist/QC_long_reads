@@ -1,17 +1,29 @@
 configfile: "config/config.yaml"  #modify config to add more samples in analysis
 
+
 def get_bam(wildcards):
     return config["samples"][wildcards.sample]
 
+
 def concat_bam_stream(input, out):
 
-    shell_commands =  "cat " + " ".join([f'<(samtools view {bam} -h | cut -f10)'for bam in input]) + f" | python workflow/scripts/generateReadLengths.py {out}"
+    shell_commands = (
+        "cat "
+        + " ".join([f"<(samtools view {bam} -h | cut -f10)" for bam in input])
+        + f" | python workflow/scripts/generateReadLengths.py {out}"
+    )
     return shell_commands
+
 
 def concat_jellyfish_stream(input, out):
 
-    shell_commands =  "cat " + " ".join([f'<(samtools fastq {bam})'for bam in input]) + f" | jellyfish count /dev/fd/0 -m21 -s {config['kmer_mem_usage']} -L 2 -C -o {out}"
+    shell_commands = (
+        "cat "
+        + " ".join([f"<(samtools fastq {bam})" for bam in input])
+        + f" | jellyfish count /dev/fd/0 -m21 -s {config['kmer_mem_usage']} -L 2 -C -o {out}"
+    )
     return shell_commands
+
 
 rule all:
     input:
@@ -19,7 +31,7 @@ rule all:
         "results/qc_tables/pca_var_explained.csv",
         "results/qc_tables/library_stats.csv",
         "results/qc_tables/meta_r2_effects.csv",
-        "results/plots/meta_varExp.png"
+        "results/plots/meta_varExp.png",
 
 
 rule generate_numpy_readLength_distributions:
@@ -33,7 +45,10 @@ rule generate_numpy_readLength_distributions:
 
 rule compute_library_stats:
     input:
-        expand("workflow/resources/readlengths_numpy/{sample}.npy", sample=config["samples"]),
+        expand(
+            "workflow/resources/readlengths_numpy/{sample}.npy",
+            sample=config["samples"],
+        ),
     output:
         "results/qc_tables/library_stats.csv",
     script:
@@ -61,20 +76,21 @@ rule dump_jellyfish_spectra_to_txt:
 rule plot_PCA_of_jellyfish_spectra:
     input:
         expand("workflow/resources/jellyfish/{sample}.jf.txt", sample=config["samples"]),
-        config['metadata']
+        config["metadata"],
     output:
-        "results/plots/kmer_None_PCA.png", #also will generate a variable # of metadata colored PCAs
+        "results/plots/kmer_None_PCA.png",  #also will generate a variable # of metadata colored PCAs
         "results/qc_tables/pca_var_explained.csv",
-        "results/qc_tables/pca_components.csv"
+        "results/qc_tables/pca_components.csv",
     script:
         "scripts/kspectra_pca.py"
+
 
 rule MixedEffect_models_of_jellyfish_PCAs:
     input:
         "results/qc_tables/pca_components.csv",
-        "results/qc_tables/library_stats.csv"
+        "results/qc_tables/library_stats.csv",
     output:
         "results/plots/meta_varExp.png",
-        "results/qc_tables/meta_r2_effects.csv"
+        "results/qc_tables/meta_r2_effects.csv",
     script:
-        'scripts/varExpModels.R'
+        "scripts/varExpModels.R"

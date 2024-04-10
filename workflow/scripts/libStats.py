@@ -8,7 +8,7 @@ if __name__ == '__main__':
     for input_library in snakemake.input:
         RL_np = np.load(input_library)
         stats = libstats.generateStatsTable(RL_np)
-        libstats.histogram(RL_array=RL_np, snk_out=input_library)
+        #libstats.histogram(RL_array=RL_np, snk_out=input_library) #Removing usage of histogram generation
         stat_matrix.append(stats)
 
     stat_table = pd.DataFrame(data=stat_matrix,
