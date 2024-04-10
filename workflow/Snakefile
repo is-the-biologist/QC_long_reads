@@ -1,6 +1,5 @@
 configfile: "config/config.yaml"  #modify config to add more samples in analysis
 
-
 def get_bam(wildcards):
     return config["samples"][wildcards.sample]
 
