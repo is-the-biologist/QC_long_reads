@@ -5,7 +5,7 @@ This is a SnakeMake pipeline that will take in sample names in a config file and
 Primarily, this pipeline focuses on analyses of k-mer spectra of the libraries. k-mers are representative of the sequence composition of libraries and there is evidence that different sequencer platforms have biases in k-mer content. This may prove useful to explore as we continue to assemble and analyze genomes. Particularly, regions of low complexity that can be biased by k-mer content more easily than single copy regions will be more strongly affected. Tandem repeats may also be biased by k-mer drop-out rates. Ultimately understanding at a broad scale the k-mer spectra can serve to QC libraries.
 
 ## Dependencies:
-All dependencies should be included in the `environment.yml` file, with the exception of `Jellyfish` (https://github.com/gmarcais/Jellyfish). To activate the environment you need conda or mamba installed and then simply do: `mamba env create --file=environment.yml`
+All dependencies and environment necessary are within the "longreadqc.sif" file and can be run with Singularity (https://docs.sylabs.io/guides/latest/user-guide/). Alternatively, the pipeline can be run by creating a conda environment with environment.yml and a seperate install of Jellyfish (https://github.com/gmarcais/Jellyfish).
 
 ## Inputs:
 
@@ -51,13 +51,12 @@ A number of intermediary files are generated to speed up re-running the pipeline
 
 # Running the pipeline:
 
-To run it should be as simple as:
+Once Singularity is installed it should be as simple as:
 
-`mamba env create --file=environment.yml`
+`singularity exec longreadqc.sif snakemake --cores 1`
 
-`mamba activate LongReadQC.v1.1`
-
-`snakemake --cores 1`
+You may modify cores to whatever number is necessary. 
+Another note: Snakemake has native capabilities for reading .sif files but there are issues with getting conda environments to run smoothly. This implementation is a workaround.
 
 ## DAG of rules:
 ![dag](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/1112b665-9b02-494d-8938-9d30821cb2a6)
@@ -80,7 +79,8 @@ And most of the remained of the PC1 variation is explained by "Z_total_bp" which
 It is important to keep in mind that this QC analysis is not meant to provide a perfect model of all the aspects of the HiFi data and completely diagnose problems. Rather, it is meant to serve as a starting point for exploratory analysis of batch effects of HiFi (or really any genomic data). 
 
 ## Parameters and modifications to consider:
-There are a few modifications that we may need to do to efficiently run on large samples. If storage of read length numpy files and I/O operations are too costly then we should modify the scripts to not save read lengths to disk or store to memory and use file streaming to generate a simplified histogram. Secondly, 
+There are a few modifications that we may need to do to efficiently run on large samples. If storage of read length numpy files and I/O operations are too costly then we should modify the scripts to not save read lengths to disk or store to memory and use file streaming to generate a simplified histogram. 
+
 
 
 
