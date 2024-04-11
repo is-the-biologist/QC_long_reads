@@ -1,27 +1,39 @@
-# QC_long_reads
-
-## Purpose:
+# Purpose:
 This is a SnakeMake pipeline that will take in sample names in a config file and output a series of tables and plots that I think will be useful QC summary statistics for HiFi reads. 
 Primarily, this pipeline focuses on analyses of k-mer spectra of the libraries. k-mers are representative of the sequence composition of libraries and there is evidence that different sequencer platforms have biases in k-mer content. This may prove useful to explore as we continue to assemble and analyze genomes. Particularly, regions of low complexity that can be biased by k-mer content more easily than single copy regions will be more strongly affected. Tandem repeats may also be biased by k-mer drop-out rates. Ultimately understanding at a broad scale the k-mer spectra can serve to QC libraries.
 
+# Running the toy example:
+
 ## Dependencies:
-All dependencies and environment necessary are within the `longreadqc.sif` file and can be run with Singularity (https://docs.sylabs.io/guides/latest/user-guide/). Unfortunately this image file is too large to be uploaded to Github. 
-Alternatively, the pipeline can be run by creating a conda environment with environment.yml and a seperate install of Jellyfish (https://github.com/gmarcais/Jellyfish).
+We require an installation of Singularity (https://docs.sylabs.io/guides/latest/user-guide/) to be able to use this pipeline as all environmental dependencies of the Snakemake pipeline are within `hifi_tools_longreadqc.sif`. 
+This image is stored in Docker Hub as a Docker image and can be pulled from the repository and converted into a Singularity image as described in the following commands. 
+Once Singularity is installed just follow the subsequent set of commands to fully run the toy example.
 
-## Inputs:
+    git clone https://github.com/is-the-biologist/QC_long_reads
+    cd QC_long_reads/
+    singularity pull docker://isaid42/hifi_tools:longreadqc
+    singularity exec hifi_tools_longreadqc.sif snakemake --cores 1
 
-### BAM files:
+You may modify `--cores` to whatever number is necessary. 
+Note: Snakemake has native capabilities for reading .sif files but there are issues with getting conda environments to run smoothly. This implementation is a workaround.
+
+# DAG of rules:
+![dag](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/1112b665-9b02-494d-8938-9d30821cb2a6)
+
+# Inputs:
+
+## BAM files:
 The Snakefile requires unaligned BAM files as input (in our case from HiFi, but conceivably from any sequencing platform). In the toy example I include HiFi reads from a human genome and from D melanogaster genome as well as Illumina reads from D melanogaster to illustrate stark k-mer differences. There is no-deduplication or adapter removal step in this workflow, but this can easily be modified by adding in those steps to before the calculation of k-mer spectra and read length statistics. 
 
-### metadata.csv:
+## metadata.csv:
 The metadata csv file contains the various meta-fields that may be important in assessing batch or technical effects in the data. In the toy example included in this repo I have added two additional columns one for "organism" and "chemistry". This won't be included in real metadata but is useful for the example workflow.
 
-### config.yaml
+## config.yaml
 .bam inputs can be specified in the `config.yaml` file. Simply modify the name and filepath of the entries within the `config.yaml` file with the BAM file paths in the "sample" section. Importantly, place the BAM files in "[]" such that each Shipping ID has all corresponding BAM files within the same ID. 
 You must also specify a metadata.csv file to use for your samples, which MUST have identical Shipping ID column entries to the IDs within the 'sample' data structure. Finally, Jellyfish takes in an argument of has table size which can be modified by 'kmer_mem_usage'. `jellyfish -s 100M` sets 100 million entries in the hash table. The recommended size of the table is: _(G + k ∗ n)/0.8_, where _G_ is genome size _k_ is k-mer size and _n_ is the number of reads in the library. Increasing hash table size will use more memory and increase run time and may not be necessary as I exclude k-mers that are singletons in the library. 
 
 
-## Outputs:
+# Outputs:
     plots/kmer_PCA.png
     plots/{sample}.histogram.png
     qc_tables/pca_var_explained.csv
@@ -48,19 +60,8 @@ future analyses.
 ## Intermediary files:
 A number of intermediary files are generated to speed up re-running the pipeline when new samples are added. These are the `.jf` files and the `.npy` files. These contain the k-mer spectra and the read length distributions respectively.
 
-# Running the toy example:
 
-Once Singularity is installed it should be as simple as:
-
-`singularity exec longreadqc.sif snakemake --cores 1`
-
-You may modify cores to whatever number is necessary. 
-Another note: Snakemake has native capabilities for reading .sif files but there are issues with getting conda environments to run smoothly. This implementation is a workaround.
-
-## DAG of rules:
-![dag](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/1112b665-9b02-494d-8938-9d30821cb2a6)
-
-## Toy example:
+# Toy example data:
 Running this Snakefile as is will run a toy example wherein we generate k-mer spectra and library statistics for human HiFi, D melanogaster HiFi, and D melanogaster Illumina BAM files. This example illustrates how regression on the PCs of k-mer spectra can generate results that allow us to find covariates driving variation in our data.
 
 ![meta_varExp](https://github.com/is-the-biologist/QC_long_reads/assets/20618833/9e20b225-c727-47c8-a12d-159e8322e8df)
