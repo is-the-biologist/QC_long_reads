@@ -6,13 +6,13 @@ Primarily, this pipeline focuses on analyses of k-mer spectra of the libraries. 
 
 ## Dependencies:
 We require an installation of Singularity (https://docs.sylabs.io/guides/latest/user-guide/) to be able to use this pipeline as all environmental dependencies of the Snakemake pipeline are within `hifi_tools_longreadqc.sif`. 
-This image is stored in Docker Hub as a Docker image and can be pulled from the repository and converted into a Singularity image as described in the following commands. 
+The image is stored in [Singularity Labs](https://cloud.sylabs.io/library/is42/hifitools/longreadqc) and [Docker Hub](https://hub.docker.com/r/isaid42/hifi_tools):
 Once Singularity is installed just follow the subsequent set of commands to fully run the toy example.
 
     git clone https://github.com/is-the-biologist/QC_long_reads
     cd QC_long_reads/
-    singularity pull docker://isaid42/hifi_tools:longreadqc
-    singularity exec hifi_tools_longreadqc.sif snakemake --cores 1
+    singularity pull --arch amd64 library://is42/hifitools/longreadqc:latest
+    singularity exec longreadqc_latest.sif snakemake --cores 1
 
 You may modify `--cores` to whatever number is necessary. 
 Note: Snakemake has native capabilities for reading .sif files but there are issues with getting conda environments to run smoothly. This implementation is a workaround.
