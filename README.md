@@ -5,7 +5,7 @@ Primarily, this pipeline focuses on analyses of k-mer spectra of the libraries. 
 # Running the toy example:
 
 ## Dependencies:
-We require an installation of Singularity (https://docs.sylabs.io/guides/latest/user-guide/) to be able to use this pipeline as all environmental dependencies of the Snakemake pipeline are within `hifi_tools_longreadqc.sif`. 
+We require an installation of Singularity (https://docs.sylabs.io/guides/latest/user-guide/) to be able to use this pipeline as all environmental dependencies of the Snakemake pipeline are within `longreadqc.sif`. 
 The image is stored in [Singularity Labs](https://cloud.sylabs.io/library/is42/hifitools/longreadqc) and [Docker Hub](https://hub.docker.com/r/isaid42/hifi_tools):
 Once Singularity is installed just follow the subsequent set of commands to fully run the toy example.
 
