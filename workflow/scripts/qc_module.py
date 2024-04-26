@@ -138,5 +138,5 @@ class library_statistics:
             plt.xticks(fontsize=15, rotation=45)
             plt.yticks(fontsize=15)
             plt.tight_layout()
-            plt.savefig(f"results/plots/{snk_out.split('/')[-1].split('npy')[0]}histogram.png", dpi=300)
+            plt.savefig(f"readlengths/{snk_out.split('/')[-1].split('npy')[0]}histogram.png", dpi=300)
             plt.close()
